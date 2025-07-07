@@ -1,11 +1,10 @@
-*! codebookgen v1.0 - Enhanced codebook generator
+*! codebookgen v1.1 - Fixed and enhanced codebook generator
 *! Author: [Your Name]
 *! Date: [Current Date]
 
 program define codebookgen
     version 16
-    syntax [varlist] using/, [REPLACE MODIFY SHEET(name) ADDVars(string asis) ///
-                             STATS(string) FORMAT EXCELX]
+    syntax [varlist] using/, [REPLACE MODIFY SHEET(name) ADDVars(string asis) FORMAT EXCELX]
     
     // Validate inputs
     if "`replace'" != "" & "`modify'" != "" {
@@ -29,12 +28,20 @@ program define codebookgen
         putexcel set "`using'", `replace' `modify' sheet("`sheet'")
     }
     
-    // Write headers
-    local headers Variable Label Question Type Values Missing Obs Source Notes
+    // Write headers (removed Source column)
+    local headers Variable Label Question Type Values Missing Obs
     local col 1
     foreach h of local headers {
         putexcel `:word `col' of `c(ALPHA)''1 = "`h'", bold border(bottom)
         local ++col
+    }
+    
+    // Add additional variable headers if specified
+    if "`addvars'" != "" {
+        foreach addvar in `addvars' {
+            putexcel `:word `col' of `c(ALPHA)''1 = "`addvar'", bold border(bottom)
+            local ++col
+        }
     }
     
     // Initialize row counter
@@ -46,7 +53,6 @@ program define codebookgen
         local varlab : var label `var'
         local vallab : value label `var'
         local chartxt : char `var'[note1]
-        local source : char `var'[source]
         
         // Counts
         qui count if !missing(`var')
@@ -56,22 +62,21 @@ program define codebookgen
         // Variable type
         local type : type `var'
         
-        // Get value labels if available
+        // Get values - only show labels if they exist
+        local values ""
         if "`vallab'" != "" {
-            levelsof `var', local(values)
-            local vallist
-            foreach val in `values' {
+            levelsof `var', local(vallevels)
+            foreach val in `vallevels' {
                 local lab : label `vallab' `val'
-                local vallist `vallist' `val'=`lab'
+                local values `values' `val'=`lab'
             }
-            local values `vallist'
         }
         else if inlist("`type'", "byte", "int", "long", "float", "double") {
-            qui tab `var', matcell(freq)
-            local values `r(r)'
+            qui sum `var'
+            local values `r(min)' - `r(max)'
         }
         else if inlist("`type'", "str#") {
-            local values "Text responses"
+            local values "Text"
         }
         
         // Write to Excel
@@ -82,11 +87,10 @@ program define codebookgen
         putexcel E`row' = `"`values'"'
         putexcel F`row' = `miss'
         putexcel G`row' = `nonmiss'
-        putexcel H`row' = `"`source'"'
         
         // Add any additional variables
         if "`addvars'" != "" {
-            local acol 9 // Start after standard columns
+            local acol 8 // Start after standard columns (G is 7th column)
             foreach addvar in `addvars' {
                 local addval : char `var'[`addvar']
                 putexcel `:word `acol' of `c(ALPHA)''`row' = `"`addval'"'
@@ -97,13 +101,13 @@ program define codebookgen
         local ++row
     }
     
-    // Apply formatting if requested
+    // Apply formatting if requested (removed wrap option)
     if "`format'" != "" {
         // Auto-size columns
-        putexcel A1:`:word `=9+wordcount("`addvars'")' of `c(ALPHA)''1, ///
+        putexcel A1:`:word `=7+wordcount("`addvars'")' of `c(ALPHA)''1, ///
             hcenter bold border(bottom, thick)
-        putexcel A2:`:word `=9+wordcount("`addvars'")' of `c(ALPHA)''`=`row'-1', ///
-            hcenter wrap
+        putexcel A2:`:word `=7+wordcount("`addvars'")' of `c(ALPHA)''`=`row'-1', ///
+            hcenter
     }
     
     di as text "Codebook successfully generated in `using'"
