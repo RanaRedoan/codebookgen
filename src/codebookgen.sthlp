@@ -18,11 +18,6 @@ help for {bf:codebookgen}
 {cmd:using/}
 [{cmd:,} 
 {cmd:replace}
-{cmd:modify}
-{cmd:sheet(}{it:string}{cmd:)}
-{cmd:addvars(}{it:string}{cmd:)}
-{cmd:format}
-{cmd:excelx}
 ]
 
 {title:Description}
@@ -39,22 +34,6 @@ and missing value statistics, producing professional documentation for your data
 
 {phang}
 {opt replace} overwrites an existing Excel file.
-
-{phang}
-{opt modify} appends to an existing Excel file (cannot combine with {opt replace}).
-
-{phang}
-{opt sheet(name)} specifies the worksheet name (default is "Codebook").
-
-{phang}
-{opt addvars(string)} lists additional characteristics to include as columns 
-(e.g., "validation notes").
-
-{phang}
-{opt format} applies automatic formatting (column widths, header styling).
-
-{phang}
-{opt excelx} forces .xlsx format (default uses Stata's default Excel format).
 
 {title:Output Structure}
 
@@ -73,11 +52,7 @@ The generated codebook includes these columns:
 
 {title:Examples}
 
-
-{phang2}{cmd:. codebookgen using "auto_codebook.xlsx", replace format}{p_end}
-{phang2}{cmd:. codebookgen make price mpg, using "auto_vars.xlsx", addvars(note1) replace}{p_end}
-{phang2}{cmd:. codebookgen foreign, using "origin_codes.xlsx", sheet("Coding") replace}{p_end}
-
+{phang2}{cmd:. codebookgen using "Test_Codebook.xlsx", replace}{p_end}
 
 
 {title:Remarks}
@@ -94,7 +69,4 @@ The generated codebook includes these columns:
 {title:Also see}
 
 {psee}
-Manual: {help optcounts}, {help char}, {help biascheck}
-
-{psee}
-Online: {browse "https://www.stata.com/support/faqs/data-management/creating-codebooks/":Creating codebooks in Stata}
+Manual: {help optcounts}, {help biascheck}
