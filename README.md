@@ -5,3 +5,8 @@
 
 ```stata
 net install codebookgen, from("https://raw.githubusercontent.com/yourusername/codebookgen/main") replace
+
+## Example
+
+```stata
+codebookgen using "codebook.xlsx", replace
