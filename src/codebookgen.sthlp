@@ -15,10 +15,9 @@ help for {bf:codebookgen}
 {p 8 17 2}
 {cmd:codebookgen} 
 [{varlist}] 
-{cmd:using/}
-[{cmd:,} 
+{cmd:using"filename.xlsx"}
+{cmd:,} 
 {cmd:replace}
-]
 
 {title:Description}
 
