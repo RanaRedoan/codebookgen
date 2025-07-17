@@ -47,7 +47,7 @@ The resulting Excel file includes the following columns:
 |------------|--------------------------------------------------------|
 | Variable   | Variable name                                          |
 | Label      | Variable label                                         |
-| Question   | Text from characteristics (e.g., char) [Note 1]        |
+| Question   | Text from characteristics                              |
 | Type       | Stata storage type                                     |
 | Values     | Value labels (if defined) or min–max range             |
 | Missing    | Count of missing observations                          |
