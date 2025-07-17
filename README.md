@@ -66,7 +66,7 @@ The resulting Excel file includes the following columns:
 ## 📌 Example
 
 ```stata
-. codebookgen using "Test_Codebook.xlsx", replace
+codebookgen using "Test_Codebook.xlsx", replace
 ```
 
 This will generate a fully formatted codebook of all labeled variables in your dataset and save it as an Excel file named `Test_Codebook.xlsx`.
