@@ -1,6 +1,6 @@
-*! codebookgen v1.1 - Fixed and enhanced codebook generator
-*! Author: [Your Name]
-*! Date: [Current Date]
+*! codebookgen v1.1 -
+*! Author: Md. Redoan Hossain Bhuiyan
+*! Date: 08 July 2025
 
 program define codebookgen
     version 16
